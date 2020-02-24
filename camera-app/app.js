@@ -1,4 +1,5 @@
-var constraints = { video: {facingMode: "user" }, audio = false};
+// Set constraints for the video stream
+var constraints = { video: {facingMode: "user" }, audio: false};
 
 const cameraView = document.querySelector("#camera--view"),
     cameraOutput = document.querySelector("#camera--output"),
@@ -29,4 +30,3 @@ cameraTrigger.onclick = function() {
 
 // Start camera once window finished loading
 window.addEventListener("load", cameraStart, false);
-
