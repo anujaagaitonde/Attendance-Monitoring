@@ -12,10 +12,10 @@ html, body {
     object-fit: cover; /* Video takes up whole screen */
 }
 
-#camera--view, #camera--sensor, #camera--output {
+/* #camera--view, #camera--sensor, #camera--output {
     transform: scaleX(-1);
     filter: FlipH;
-}
+} */
 
 #camera--trigger {
     position: fixed;
