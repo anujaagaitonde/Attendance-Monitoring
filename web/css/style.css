@@ -9,7 +9,7 @@ html, body {
     position: fixed;
     height: 100%;
     width: 100%;
-    object-fit: cover; /* Video takes up whole screen */
+    object-fit: cover;  /* Video takes up whole screen */
 }
 
 /* #camera--view, #camera--sensor, #camera--output {
