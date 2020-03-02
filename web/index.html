@@ -20,19 +20,33 @@
 <body>
 
     <!-- Camera -->
-    <!-- <div class="container"> -->
-        <main id="camera">
-            <!-- Camera sensor -->
-            <canvas id="camera--sensor"></canvas> <!-- Grabs frame from video stream when requested -->
-            <video id="camera--view" autoplay playsinline></video>
-            <!-- Access device camera and display video stream-->
-            <img id="camera--output" alt="" src="//:0">
-            <button id="camera--trigger">Scan QR Code</button>
-        </main>
-    <!-- </div> -->
+    <div class="container">
+        <div class="row">
+            <div id="camera">
+                <!-- Camera sensor -->
+                <canvas id="camera--sensor"></canvas> <!-- Grabs frame from video stream when requested -->
+                <video id="camera--view" autoplay playsinline></video>
+                <!-- Access device camera and display video stream-->
+                <img id="camera--output" alt="" src="//:0">
+                <button id="camera--trigger">Scan QR Code</button>
+            </div>
+        </div>
+        <!-- Image file input - just for testing - remove later -->
+        <div class="row">
+            <div id="upload">
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="file" name="image_uploads" accept=".jpg, .jpeg, .png" id="file-input">
+                    <div class="preview">
+                        <p>No files currently selected for upload</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- JavaScript file reference -->
-    <script src="js/app.js"></script>
+    <script src="js/app.js"></script> <!-- Main JS -->
+    <script src="js/img_upload.js"></script> <!-- JS for file upload - just for testing - remove later -->
     <!-- QR Code scanning JS -->
     <script type="text/javascript" src="js/grid.js"></script>
     <script type="text/javascript" src="js/version.js"></script>
