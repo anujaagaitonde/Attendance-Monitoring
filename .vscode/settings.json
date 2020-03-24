@@ -7,5 +7,7 @@
         ".vscode/**",
         "**/*.scss",
         "**/*.sass"
-    ]
+    ],
+    "python.linting.pylintEnabled": true,
+    "python.pythonPath": "/usr/local/bin/python3.8"
 }
