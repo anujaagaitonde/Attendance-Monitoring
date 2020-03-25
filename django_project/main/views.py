@@ -1,29 +1,14 @@
 from django.shortcuts import render
+from .models import Post # import post model from DB (. because this file and models.py are in the same directory)
 
 # Create your views here.
-
-# Create posts dummy data - list of dictionaries which contain data about each post
-posts = [
-    {
-        'author': 'Anuja Gaitonde',
-        'title': 'Blog post 1',
-        'content': 'This is my first post!',
-        'date_posted': 'March 24th, 2020',
-    },
-    {
-        'author': 'Raunak Gaitonde',
-        'title': 'Blog post 2',
-        'content': 'Hello Anuja!',
-        'date_posted': 'March 25th, 2020',
-    }
-]
 
 # Take in a HTTP request as input and return a HTTP response which displays 
 def home(request):
     # all relevant dummy data stored in context dictionary (contains posts which is a list of dictionaries)
     context = {
         # key = posts
-        'posts': posts
+        'posts': Post.objects.all() # load posts into home view sfrom Post model
     }
     # render: (request, path of template in templates dir, context - passes data into template)
     return render(request, 'main/home.html', context)

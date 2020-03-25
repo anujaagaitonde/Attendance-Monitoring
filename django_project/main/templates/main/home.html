@@ -6,7 +6,8 @@
         <div class="media-body">
             <div class="article-metadata">
             <a class="mr-2" href="#">{{ post.author }}</a>
-            <small class="text-muted">{{ post.date_posted }}</small>
+            <!-- Print date posted in long month, date, year format. | = Django filter - see django docs for details  -->
+            <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
             </div>
             <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
             <p class="article-content">{{ post.content }}</p>
