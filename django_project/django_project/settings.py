@@ -119,8 +119,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 STATIC_URL = '/static/'
+
+# Specfies directory on the file system in which to store uploaded media such as profile pic - will work on any OS
+# BASE_DIR = variable defined at top of script which specifies the location of the base directory
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Public URL of above directory (how media directory is accessed from browser)
+MEDIA_URL = '/media/'
 
 # Specify CSS framework for crispy forms to use
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

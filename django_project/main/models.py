@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone # for datetime data
 from django.contrib.auth.models import User # import user table from built in django auth
+from django.urls import reverse
 
 # Create your models here.
 
@@ -13,3 +14,10 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    
+    # return absolute url of 'post-detail' page for post instance created so that redirect occurs after creating a new post
+    def get_absolute_url(self):
+        # to get specific post-detail URL, need to pass post instance primary key
+        return reverse('post-detail', kwargs={'pk': self.pk})
+
+    
