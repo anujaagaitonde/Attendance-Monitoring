@@ -20,4 +20,3 @@ class Post(models.Model):
         # to get specific post-detail URL, need to pass post instance primary key
         return reverse('post-detail', kwargs={'pk': self.pk})
 
-    

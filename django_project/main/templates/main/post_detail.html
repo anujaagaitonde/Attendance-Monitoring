@@ -6,7 +6,7 @@
     <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
     <div class="media-body">
         <div class="article-metadata">
-            <a class="mr-2" href="#">{{ object.author }}</a>
+            <a class="mr-2" href="{% url 'user-posts' object.author.username %}">{{ object.author }}</a>
             <!-- Print date posted in long month, date, year format. | = Django filter - see django docs for details  -->
             <small class="text-muted">{{ object.date_posted|date:"F d, Y" }}</small>
             {% if object.author == user %}

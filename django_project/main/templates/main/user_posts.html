@@ -1,6 +1,7 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
+    <h1>Posts by {{ view.kwargs.username }} ({{ page_obj.paginator.count }})</h1> <!-- Display username of post author on this page and the number of posts they've posted -->
     {% for post in posts %}
         <article class="media content-section">
             <!-- Add author profile image -->
