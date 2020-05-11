@@ -12,7 +12,7 @@
                 <p class="text-secondary">{{ user.email }}</p>
             </div>
         </div>
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <!-- token used to protect forms against certain attacks - required by Django-->
             {% csrf_token %}
             <!-- Bootstrap class for forms, fieldset groups related elements in a form -->
