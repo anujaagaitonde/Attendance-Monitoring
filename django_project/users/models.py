@@ -14,8 +14,8 @@ class Profile(models.Model):
         return f'{self.user.username} Profile'
 
     # override pre-existing save method to resize profile image
-    def save(self):
-        super().save() # access save method of parent class
+    def save(self, **kwargs):
+        super().save(**kwargs) # access save method of parent class
 
         # Open image
         img = Image.open(self.image.path)
