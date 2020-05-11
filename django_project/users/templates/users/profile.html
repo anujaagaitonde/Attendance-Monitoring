@@ -12,6 +12,7 @@
                 <p class="text-secondary">{{ user.email }}</p>
             </div>
         </div>
+        <!-- enctype allows image data to be passed -->
         <form method="POST" enctype="multipart/form-data">
             <!-- token used to protect forms against certain attacks - required by Django-->
             {% csrf_token %}
