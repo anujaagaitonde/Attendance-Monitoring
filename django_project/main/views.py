@@ -12,7 +12,7 @@ def home(request):
     # all relevant data stored in context dictionary (contains posts which is a list of dictionaries)
     context = {
         # key = posts
-        'posts': Post.objects.all() # load posts into home view sfrom Post model
+        'posts': Post.objects.all() # load posts into home view from Post model
     }
     # render: (request, path of template in templates dir, context - passes data into template)
     return render(request, 'main/home.html', context)
