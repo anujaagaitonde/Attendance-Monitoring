@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import ProfileUpdateForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .models import Student
 
 # Profile view
 @login_required # Decorator means user can only access profile page if they are logged in
@@ -20,9 +21,16 @@ def profile(request):
     else:
         p_form = ProfileUpdateForm(instance = request.user.profile)
 
-    # Store forms in context dictionary to pass to template
-    context = {
-        'p_form': p_form
-    }
+    if Student.objects.filter(user=request.user).exists():
+        context = {
+            'p_form': p_form,
+            'student_status': 'student'
+        }
+
+    else:
+        # Store forms in context dictionary to pass to template
+        context = {
+            'p_form': p_form
+        }
 
     return render(request, 'users/profile.html', context)

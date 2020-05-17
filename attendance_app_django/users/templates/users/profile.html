@@ -10,6 +10,10 @@
             <div class="media-body">
                 <h2 class="account-heading">{{ user.username }}</h2>
                 <p class="text-secondary">{{ user.email }}</p>
+                {% if student_status %}
+                    <small class="text-muted">Course: {{ user.student.course }}</small><br>
+                    <small class="text-muted">Year: {{ user.student.year }}</small>
+                {% endif %}
             </div>
         </div>
         <!-- enctype allows image data to be passed -->

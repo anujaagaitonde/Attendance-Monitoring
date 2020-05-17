@@ -26,3 +26,32 @@ class Profile(models.Model):
             output_size = (300,300)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+# Student user model (type of User - each student has a User object (account))
+class Student(models.Model):
+    user = models.OneToOneField(User,  on_delete=models.CASCADE) # Each Student object maps to one account and vice versa
+    cid = models.AutoField(primary_key=True) # CIDs have 8 digits
+    course = models.CharField(max_length=50, null = True)
+    year = models.IntegerField(null=True)
+    
+    def __str__(self):
+        return f'Student {self.user.username}'
+
+# Staff user model (type of User - each staff member has a User object (account))
+class Staff(models.Model):
+    user = models.OneToOneField(User,  on_delete=models.CASCADE) # Each Staff object maps to one account and vice versa
+    # Can add any other necessary staff attributes
+    
+    def __str__(self):
+        return f'Staff {self.user.username}'
+    
+    class Meta:
+        verbose_name_plural = 'Staff' # otherwise default in admin page would be 'Staffs'
+
+# Admin user model (type of User - each admin user has a User object (account))
+class Admin(models.Model):
+    user = models.OneToOneField(User,  on_delete=models.CASCADE) # Each Admin object maps to one account and vice versa
+    # Can add any other necessary staff attributes
+    
+    def __str__(self):
+        return f'Admin {self.user.username}'
