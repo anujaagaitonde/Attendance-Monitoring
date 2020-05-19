@@ -1,6 +1,7 @@
 {% extends 'main/base.html'%}
 
 {% load crispy_forms_tags %}
+{% load user_extras %}
 
 {% block content %}
 <!-- Apply Bootstrap and static CSS styling -->
@@ -8,14 +9,18 @@
         <div class="media">
             <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
             <div class="media-body">
-                <h2 class="account-heading">{{ user.username }}</h2>
-                <p class="text-secondary">{{ user.email }}</p>
-                {% if student_status %}
-                    <small class="text-muted">Course: {{ user.student.course }}</small><br>
-                    <small class="text-muted">Year: {{ user.student.year }}</small>
+                <h2 class="account-heading">{{ user.first_name }} {{ user.last_name }}</h2>
+                <ul class="list-unstyled">
+                    <li class="text-secondary"><b>Username: </b>{{ user.username }}</li>
+                    <li class="text-secondary"><b>Email: </b>{{ user.email }}</li>
+                {% if user|has_group:"Students" %}
+                    <li class="text-muted"><b>Course: </b>{{ user.student.course }}</li>
+                    <li class="text-muted"><b>Year: </b>{{ user.student.year }}</li>
                 {% endif %}
+                </ul>   
             </div>
         </div>
+        {% block profile_form %}
         <!-- enctype allows image data to be passed -->
         <form method="POST" enctype="multipart/form-data">
             <!-- token used to protect forms against certain attacks - required by Django-->
@@ -32,5 +37,6 @@
                 <button class="btn btn-outline-info" type="submit">Update</button>
             </div>
         </form>
+        {% endblock profile_form %}
     </div>
 {% endblock content %}

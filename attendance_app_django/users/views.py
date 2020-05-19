@@ -1,7 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ProfileUpdateForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponseForbidden
 from .models import Student
 
 # Profile view
@@ -21,16 +23,26 @@ def profile(request):
     else:
         p_form = ProfileUpdateForm(instance = request.user.profile)
 
-    if Student.objects.filter(user=request.user).exists():
-        context = {
-            'p_form': p_form,
-            'student_status': 'student'
-        }
-
-    else:
         # Store forms in context dictionary to pass to template
-        context = {
-            'p_form': p_form
-        }
+    context = {
+        'p_form': p_form
+    }
 
+    # Syntax render(request, template path, context)
     return render(request, 'users/profile.html', context)
+
+
+# View another user's profile (only available to staff / admin user)
+@login_required
+def user_profile(request, username):
+
+    user = get_object_or_404(User, username=username) # extract username from URL   
+    
+    # If the logged in user is trying to view their own profile, redirect to profile view
+    if request.user.groups.filter(name="Admin").exists() or request.user.groups.filter(name="Staff").exists():
+        context = {
+            'user': user
+        }
+        return render(request, 'users/user_profile.html', context)
+    else:
+        return HttpResponseForbidden()  # Students shouldn't be able to see other profiles

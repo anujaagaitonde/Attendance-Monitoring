@@ -22,6 +22,7 @@ def save_profile(sender, instance, **kwargs):
 def create_user_type_object(sender, instance, **kwargs):
     if instance.groups.filter(name='Students').exists():
         if not Student.objects.filter(user=instance).exists():
+            # Create Student object if a user is added to group "Students"
             Student.objects.create(user=instance)
             instance.student.save()
     elif instance.groups.filter(name='Staff').exists():

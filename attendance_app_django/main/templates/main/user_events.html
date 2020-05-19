@@ -1,0 +1,7 @@
+{% extends 'main/events.html' %}
+
+{% block upcoming_or_past %}
+    <!-- view.kwargs.username extracts username from URL -->
+    <h1><a href="{% url 'user-profile' view.kwargs.username %}">{{ view.kwargs.username }}</a>'s Upcoming Events ({{ page_obj.paginator.count }})</h1> <!-- Display number of upcoming events for this user -->
+    <h6><a class="subtitle" href="{% url 'user-past-events' view.kwargs.username %}">View Past Events</a></h6>
+{% endblock upcoming_or_past %}

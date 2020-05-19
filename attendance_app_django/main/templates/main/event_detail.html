@@ -1,0 +1,45 @@
+{% extends 'main/base.html' %}
+
+{% load user_extras %}
+
+{% block content %}
+<article class="media content-section">
+    <div class="media-body">
+        <!-- Display event details -->
+        <div class="article-header">
+            <h2 class="article-title">{{ event.title }}</h2>
+                {% if event.happening_now %}
+                    <div class="article-status">Now</div>
+                {% endif %}
+        </div>
+        <div class="article-metadata">
+            <ul class="list-unstyled">
+                <li class="text-secondary"><b>Event Type:</b> {{ object.get_event_type_display }}</li>
+                <li class="text-muted"><b>Location:</b> {{ object.location }}</li>
+                <li class="text-muted"><b>Start Time:</b> {{ object.start_time }}</li>
+                <li class="text-muted"><b>End Time:</b> {{ object.end_time }}</li>
+                <li class="text-muted"><b>Leader:</b> {{ object.leader }}</li>
+                <li class="text-muted"><b>UUID:</b> {{ object.auth_uuid }}</li>
+            </ul>
+        </div>
+        <div>
+            <!-- Only students shouldn't be able to see event attendees. Uses custom extras defined in user_extras.py -->
+            {% if not user|has_group:'Students' %}
+            <ul class="list-unstyled">
+                <li class="text-muted"><b>Attendees:</b></li>
+                <small class="text-muted">
+                    {% for student in object.attendees.all %}
+                    <ul class="list-unstyled">
+                        <li class="list-unstyled-item"><a href="{% url 'user-profile' student.user.username %}">{{ student.user.username }}</a></li>
+                    </ul>
+                    {% endfor %}
+                </small></li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</article>
+{% endblock content %}
+
+<!-- Add logic to display QR code if user = staff and event is currently happening -->
+<!-- Add links to view a student's profile -->

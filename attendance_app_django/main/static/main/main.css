@@ -7,11 +7,38 @@ body {
   h1, h2, h3, h4, h5, h6 {
     color: #444444;
   }
+
+  h1 a{
+    color: #444444;
+  }
+
+  a:hover{
+    color: #428bca;
+    text-decoration: none;
+  }
   
   ul {
     margin: 0;
   }
+
+  li a{
+    color: #444444;
+  }
+
+  li a:hover{
+    color: #428bca;
+    text-decoration: none;
+  }
+
+  .subtitle{
+    color: #444444;
+  }
   
+  a.subtitle:hover {
+    color: #428bca;
+    text-decoration: none;
+  }
+
   .bg-steel {
     background-color: #5f788a;
   }
@@ -35,9 +62,18 @@ body {
     border-radius: 3px;
     margin-bottom: 20px;
   }
+
+  .article-header{
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e3e3e3;
+  }
   
-  .article-title {
+  .article-header .article-title {
     color: #444444;
+  }
+
+  .article-header .article-status {
+    color: #009945;
   }
   
   a.article-title:hover {
@@ -56,8 +92,8 @@ body {
   }
   
   .article-metadata {
-    padding-bottom: 1px;
-    margin-bottom: 4px;
+    padding-bottom: 10px;
+    margin-bottom: 5px;
     border-bottom: 1px solid #e3e3e3
   }
   

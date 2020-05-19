@@ -1,0 +1,13 @@
+{% extends 'users/profile.html' %}
+
+{% load user_extras %}
+
+{% block profile_form %}
+    <div>
+        <!-- Only students have attendance record / can have their events viewed by another user -->
+        {% if user|has_group:"Students" %}
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'user-events' user.username %}">View Events</a>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">View Attendance Record</a>
+        {% endif %}
+    </div>
+{% endblock profile_form %}
