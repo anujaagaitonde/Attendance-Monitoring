@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'users.apps.UsersConfig',
     'users.templatetags.user_extras',
+    'main.templatetags.event_extras',
 ]
 
 MIDDLEWARE = [
@@ -109,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/London'
 
 USE_I18N = True
 
@@ -133,7 +135,12 @@ MEDIA_URL = '/media/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Specify redirect URL after login
-LOGIN_REDIRECT_URL = 'main-home'
+LOGIN_REDIRECT_URL = 'my-events'
 
 # Specify login URL to use @login_required decorator
 LOGIN_URL = 'login'
+
+# Default error message colour is blank - make it red
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}

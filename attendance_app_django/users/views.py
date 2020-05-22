@@ -3,7 +3,7 @@ from .forms import ProfileUpdateForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponseForbidden
+from django.http import HttpResponse
 from .models import Student
 
 # Profile view
@@ -45,4 +45,4 @@ def user_profile(request, username):
         }
         return render(request, 'users/user_profile.html', context)
     else:
-        return HttpResponseForbidden()  # Students shouldn't be able to see other profiles
+        return HttpResponse(status=403)  # Students shouldn't be able to see other profiles

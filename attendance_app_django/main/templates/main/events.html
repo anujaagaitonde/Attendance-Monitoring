@@ -1,5 +1,8 @@
 {% extends 'main/base.html' %}
 
+{% load user_extras %}
+{% load event_extras %}
+
 {% block content %}
     {% block upcoming_or_past %}
         <h1>Upcoming Events ({{ page_obj.paginator.count }})</h1> <!-- Display number of upcoming events for this user -->
@@ -22,6 +25,18 @@
                         <li class="text-muted"><b>Start Time:</b> {{ event.start_time }}</li>
                         <li class="text-muted"><b>End Time:</b> {{ event.end_time }}</li>
                         <li class="text-muted"><b>Leader:</b> {{ event.leader }}</li>
+                        {% block auth_info %}
+                            {% if user|has_group:"Students" %}
+                                <li class="text-muted">
+                                    <b>Authenticated:</b>
+                                    {% if event|attendance_authenticated:user %}
+                                        True
+                                    {% else %}
+                                        False
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+                        {% endblock auth_info %}
                         <li class="text-muted"><b>UUID:</b> {{ event.auth_uuid }}</li>
                     </ul>
                 </div>

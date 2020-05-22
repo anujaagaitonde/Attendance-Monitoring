@@ -1,16 +1,25 @@
 {% extends 'main/base.html' %}
 
 {% load user_extras %}
+{% load event_extras %}
 
 {% block content %}
 <article class="media content-section">
     <div class="media-body">
         <!-- Display event details -->
         <div class="article-header">
-            <h2 class="article-title">{{ event.title }}</h2>
-                {% if event.happening_now %}
+            <h2 class="article-title">{{ object.title }}</h2>
+                {% if object.happening_now %}
                     <div class="article-status">Now</div>
                 {% endif %}
+            <div>
+                {% if not user|has_group:'Students' %}
+                    {% if object.happening_now %}
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'event-QR' object.id %}">Show QR Code</a>
+                    {% endif %}
+                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Take Register</a>
+                {% endif %}
+            </div>
         </div>
         <div class="article-metadata">
             <ul class="list-unstyled">
@@ -19,6 +28,16 @@
                 <li class="text-muted"><b>Start Time:</b> {{ object.start_time }}</li>
                 <li class="text-muted"><b>End Time:</b> {{ object.end_time }}</li>
                 <li class="text-muted"><b>Leader:</b> {{ object.leader }}</li>
+                <li class="text-muted">
+                {% if user|has_group:"Students" %} <!-- user = logged in user -->
+                    <b>Authenticated:</b>
+                    {% if object|attendance_authenticated:user %}
+                        True
+                    {% else %}
+                        False
+                    {% endif %}
+                </li>
+                {% endif %}
                 <li class="text-muted"><b>UUID:</b> {{ object.auth_uuid }}</li>
             </ul>
         </div>

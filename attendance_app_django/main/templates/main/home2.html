@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block custom_css %}
+<link rel="stylesheet" href="{% static 'main/style.css' %}">
+{% endblock custom_css %}
+
+{% block content %}
+    <h1>Authenticate Attendance</h1>
+    <form method="POST">
+        <!-- token used to protect forms against certain attacks - required by Django-->
+        {% csrf_token %}
+        <!-- Bootstrap class for forms, fieldset groups related elements in a form -->
+        <fieldset class = "form-group"> 
+            <!-- Another bootstrap class (adds a bottom border and bottom margin of 4) - legend gives the form more detail -->
+            <legend class = "border-bottom mb-4">Enter Authentication Hash</legend>
+            <!-- Include form variable from context. use crispy filter for styling -->
+            {{ form|crispy }}
+        </fieldset>
+        <!-- Submit button -->
+        <div class ="form-group">
+            <!-- <button class="btn btn-outline-info" type="submit">Update</button> -->
+        </div>
+    </form>
+{% endblock content %}

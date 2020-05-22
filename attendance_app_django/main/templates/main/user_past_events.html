@@ -1,4 +1,7 @@
-{% extends 'main/events.html' %}
+{% extends 'main/user_events.html' %}
+
+{% load user_extras %}
+{% load event_extras %}
 
 {% block upcoming_or_past %}
     <!-- view.kwargs.username extracts username from URL -->

@@ -74,6 +74,7 @@ body {
 
   .article-header .article-status {
     color: #009945;
+    padding-bottom: 10px;
   }
   
   a.article-title:hover {

@@ -1,0 +1,26 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <article class="media content-section">
+        <div class="media-body">
+            <!-- Display event details -->
+            <div class="article-header">
+                <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
+            </div>
+            <div class="article-metadata">
+                <ul class="list-unstyled">
+                    <li class="text-secondary"><b>Event Type:</b> {{ event.get_event_type_display }}</li>
+                    <li class="text-muted"><b>Start Time:</b> {{ event.start_time }}</li>
+                    <li class="text-muted"><b>End Time:</b> {{ event.end_time }}</li>
+                </ul>
+            </div>
+            <!-- Add Bootstrap Styling to QR code-->
+            <div class="container">
+                <div class="row">
+                    <!-- QR code takes up entire width of container and stores auth uuid -->
+                    <img class="article-content col-md-12" src="https://api.qrserver.com/v1/create-qr-code/?data={{ event.auth_uuid }}&size=1000x1000" alt="QR code">
+                </div>
+            </div>
+        </div>
+    </article>
+{% endblock content %}
