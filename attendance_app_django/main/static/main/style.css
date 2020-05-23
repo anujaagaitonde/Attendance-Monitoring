@@ -1,11 +1,11 @@
 
 #camera, #camera--view, #camera--sensor, #camera--output {
-    position: absolute;
-    top:0;
-    left:0;
+    /* position: sticky;
+    /* top:0px; */
+    /* left:0; */
     height: 100%;
     width: 100%;
-    object-fit: cover;  /* Video takes up whole screen */
+    object-fit: cover;
 }
 
 /* #camera--view, #camera--sensor, #camera--output {
@@ -13,7 +13,7 @@
     filter: FlipH;
 } */
 
-#camera--trigger {
+/* #camera--trigger {
     position: fixed;
     width: 200px;
     background-color: black;
@@ -26,7 +26,7 @@
     box-shadow: 0 5px 10px 0 rgba(0,0,0,0.2);
     bottom: 30px;
     left: calc(50% - 100px);
-}
+} */
 
 .taken {
     height: 100px!important;

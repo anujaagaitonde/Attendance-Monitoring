@@ -170,6 +170,9 @@ def get_attendance_auth(request):
                 print("invalid auth hash")
                 messages.error(request, f'Invalid authentication hash')
                 return redirect('main-home')
+        else: 
+            messages.error(request, f'Error Decoding QR Code')
+            return redirect('main-home')
     else: # If this is a GET (or any other method), create a blank form
         form = AttendanceAuthenticateForm()
     

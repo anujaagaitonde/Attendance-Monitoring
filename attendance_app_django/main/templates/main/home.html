@@ -1,108 +1,74 @@
+{% extends 'main/base.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
+{% block custom_css %}
+<!-- Link to stylesheet -->
+<link rel="stylesheet" href="{% static 'main/style.css' %}">
+<link rel="stylesheet" href="{% static 'main/main.css' %}">
+{% endblock custom_css %}
 
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width = device-width, initial-scale = 1, shrink-to-fit = no">
-    <!--  Responsive viewport meta tag-->
-
-    <title>Attendance Monitoring App</title>
-
-    <!-- Link to stylesheet -->
-    <link rel="stylesheet" href="{% static 'main/style.css' %}">
-    <link rel="stylesheet" href="{% static 'main/main.css' %}">
-    <!-- Bootstrap CSS-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-</head>
-
-<body>
-
-<!-- Navigation bar -->
-<header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-          <div class="container">
-            <a class="navbar-brand mr-4" href="{% url 'main-home' %}">Attendance App</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarToggle">
-              <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="{% url 'main-home' %}">Scan</a>
-                <a class="nav-item nav-link" href="{% url 'my-events' %}">My Events</a>
-              </div>
-              <!-- Navbar Right Side -->
-              <div class="navbar-nav">
-                {% if user.is_authenticated %}
-                  <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
-                  <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
-                {% else %}
-                  <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header>
-
-    <!-- Camera -->
-    <div class="container">
+{% block content %}
+<article class="media content-section">
+    <!-- Add author profile image -->
+    <div class="media-body">
+        <div class="article-header">
+            <h2 class="article-title">Scan QR Code To Authenticate Attendance</h2>
+        </div>
         <div class="row">
-            <div id="camera">
+            <form method="POST" id="auth_form" class="col-md-12" style="display:none;">
+                <!-- token used to protect forms against certain attacks - required by Django-->
+                {% csrf_token %}
+                <!-- Bootstrap class for forms, fieldset groups related elements in a form -->
+                <fieldset class="form-group">
+                    <!-- Another bootstrap class (adds a bottom border and bottom margin of 4) - legend gives the form more detail -->
+                    <!-- <legend class = "border-bottom mb-4">Enter Authentication Hash</legend> -->
+                    <!-- Include form variable from context. use crispy filter for styling -->
+                    {{ form }}
+                </fieldset>
+                <!-- Submit button -->
+                <div class="form-group">
+                    <!-- <button class="btn btn-outline-info" type="submit">Update</button> -->
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <div id="camera" class="col-md-12">
                 <!-- Camera sensor -->
-                <canvas id="camera--sensor"></canvas> <!-- Grabs frame from video stream when requested -->
                 <video id="camera--view" autoplay playsinline></video>
                 <!-- Access device camera and display video stream-->
-                <img id="camera--output" alt="" src="//:0">
-                <button id="camera--trigger">Scan QR Code</button>
+                <img id="camera--output" alt="" src="//:0" style="display:none">
+                <canvas id="camera--sensor" style="display:none;"></canvas> <!-- Grabs frame from video stream when requested -->
+                <button id="camera--trigger" class="btn btn-outline-info">Scan QR Code</button>
             </div>
         </div>
+
+
     </div>
+</article>
+{% endblock content %}
 
-    <form method="POST" id="auth_form">
-        <!-- token used to protect forms against certain attacks - required by Django-->
-        {% csrf_token %}
-        <!-- Bootstrap class for forms, fieldset groups related elements in a form -->
-        <fieldset class = "form-group"> 
-            <!-- Another bootstrap class (adds a bottom border and bottom margin of 4) - legend gives the form more detail -->
-            <!-- <legend class = "border-bottom mb-4">Enter Authentication Hash</legend> -->
-            <!-- Include form variable from context. use crispy filter for styling -->
-            {{ form }}
-        </fieldset>
-        <!-- Submit button -->
-        <div class ="form-group">
-            <!-- <button class="btn btn-outline-info" type="submit">Update</button> -->
-        </div>
-    </form>
-
-    <!-- JavaScript file reference -->
-    <script src="{% static 'main/js/app.js' %}"></script> <!-- Main JS -->
-    <script src="{% static 'main/js/img_upload.js' %}"></script> <!-- JS for file upload - just for testing - remove later -->
-    <!-- QR Code scanning JS -->
-    <script type="text/javascript" src="{% static 'main/js/grid.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/version.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/detector.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/formatinf.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/errorlevel.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/bitmat.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/datablock.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/bmparser.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/datamask.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/rsdecoder.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/gf256poly.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/gf256.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/decoder.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/qrcode.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/findpat.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/alignpat.js' %}"></script>
-    <script type="text/javascript" src="{% static 'main/js/databr.js' %}"></script>
-    <!-- Bootstrap scripts: jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-</body>
-
-</html>
+{% block custom_js %}
+<!-- JavaScript file reference -->
+<script src="{% static 'main/js/app.js' %}"></script> <!-- Main JS -->
+<!-- JS for file upload - just for testing - remove later -->
+<!-- QR Code scanning JS -->
+<script type="text/javascript" src="{% static 'main/js/grid.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/version.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/detector.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/formatinf.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/errorlevel.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/bitmat.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/datablock.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/bmparser.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/datamask.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/rsdecoder.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/gf256poly.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/gf256.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/decoder.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/qrcode.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/findpat.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/alignpat.js' %}"></script>
+<script type="text/javascript" src="{% static 'main/js/databr.js' %}"></script>
+{% endblock custom_js %}

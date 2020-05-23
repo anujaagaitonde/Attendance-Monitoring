@@ -40,16 +40,15 @@ cameraTrigger.onclick = function () {
     var imageURI = cameraOutput.src;
     decodeImageFromBase64(imageURI, function (decodedInformation) { // decode captured image from local URL
         console.log(decodedInformation);
-        if (decodedInformation == "error decoding QR Code" || decodedInformation == "Failed to load the image") {
-            alert(decodedInformation);
-        }
-        else {
-            var decoded_info = decodedInformation;
-            // obtain decoded information in variable and send to form value
-            document.getElementById("id_auth_hash").value = decoded_info;
-            // Automatically submit form once data is populated
-            document.getElementById("auth_form").submit();
-        }
+        // if (decodedInformation == "error decoding QR Code" || decodedInformation == "Failed to load the image") {
+        //     alert(decodedInformation);
+        // }
+        // else {
+        var decoded_info = decodedInformation;
+        // obtain decoded information in variable and send to form value
+        document.getElementById("id_auth_hash").value = decoded_info;
+        // Automatically submit form once data is populated
+        document.getElementById("auth_form").submit();
     });
     // console.log(decodedInformation);
 };
