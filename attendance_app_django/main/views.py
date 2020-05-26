@@ -4,14 +4,16 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.views.generic import DetailView, ListView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Event, Attendance
-from .forms import AttendanceAuthenticateForm
+from .models import Event, Attendance, Verification
+from .forms import AttendanceAuthenticateForm, AttendanceVerificationForm
 from django.utils import timezone
 from django.conf import settings
+from django.forms import formset_factory
+from django.http import HttpResponse
 
 # Create your views here.
 
-# View for homepage. Most likely will be scanner
+# View for homepage. NO LONGER USED BUT KEPT FOR REFERENCE
 def home(request):
     context = {
         'title': 'Success',
@@ -139,7 +141,6 @@ def get_attendance_auth(request):
         if form.is_valid(): # Check whether input data is valid
             user = request.user # Get logged in user
             if not user.groups.filter(name='Students').exists(): # Student / admin user does not need to authenticate attendance
-                print("Unauthorised")
                 messages.error(request, f'Unauthorised')
                 return redirect('main-home')
             auth_hash = form.cleaned_data['auth_hash'] # Extract auth hash from form data. Type = UUID
@@ -201,9 +202,64 @@ class GenerateQR(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         else:
             return False
 
+# Generate electronic register for staff members to verify who was present at their event
+@login_required
+def take_register(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    student_auths = Attendance.objects.filter(event=event).order_by('student__user__first_name', 'student__user__last_name') # Extract queryset of authentications, ordered by student's first name
+    count = student_auths.count()
+    register_formset = formset_factory(AttendanceVerificationForm, extra=count) # Create formset
 
-def scan_qr(request):
-    context = {
-        'text': 'Success!'
-    }
-    return render(request, 'main/scan.html', context)
+    # Create list of dictionaries which contains previously submitted register information (if any)
+    initial = []
+    for auth in student_auths:
+        initial.append(
+            {'mark_attendance': Verification.objects.filter(student=auth.student, event=event).exists()}
+        )
+
+    # Only staff event leader or admin user should be able to access register
+    if event.leader.user == request.user or request.user.groups.filter(name="Admin").exists():
+        if event.event_type == 'LE': # Register does not need to be taken at lectures
+            messages.info(request, f'Register does not need to be taken at a lecture')
+            return redirect(event.get_absolute_url())
+        else: # Tutorials, study groups and exams require a register to be taken
+            if event.started(): # Only allow register to be taken if event has started
+                if request.method == 'POST': # If the request is a POST request, process the form's data
+                    formset = register_formset(request.POST)
+                    student_list = zip(formset, student_auths)
+                    if formset.is_valid():
+                        event.register_taken = True # Mark that a register has been taken for this event
+                        event.save()
+                        for form, auth in student_list:
+                            student = auth.student
+                            mark = form.cleaned_data.get('mark_attendance') # Obtain data submitted from each form in formset
+                            if mark == True:
+                                if Verification.objects.filter(student=student, event=event).exists(): # Verification already exists for this particular event and student
+                                    verification = Verification.objects.get(student=student, event=event)
+                                    verification.verification_time = timezone.now() # Edit that verification object
+                                else:
+                                    verification = Verification.objects.create(verification_time=timezone.now(), event=event, student=student) # Create Verification object
+                                verification.save()
+                            else:
+                                if Verification.objects.filter(student=student, event=event).exists(): # Verification already exists for this particular event and student
+                                    verification = Verification.objects.get(student=student, event=event)
+                                    verification.delete() # Delete verification object if student was not present at that event
+                        messages.success(request, f'Register saved successfully!')
+                        return redirect(event.get_absolute_url())
+                else: # If this is a GET (or any other) request, create a blank formset
+                    student_list = zip(register_formset(initial=initial), student_auths) # Initialise formset with previous register data (if any)
+            else: # Event hasn't started yet
+                messages.error(request, f'Event has not started yet')
+                return redirect(event.get_absolute_url())
+        
+        context = {
+                'formset': register_formset(),
+                'list': student_list,
+                'event': event,
+        }
+
+        return render(request, 'main/take_register.html', context)
+
+    else: # Logged in user is not an admin user / staff leader
+        return HttpResponse(status=403)
+

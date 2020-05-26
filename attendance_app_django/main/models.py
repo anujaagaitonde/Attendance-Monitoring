@@ -30,13 +30,22 @@ class Event(models.Model):
     leader = models.ForeignKey(Staff, on_delete=models.CASCADE, related_name = 'staff_leader') # Leader must be a staff member
     attendees = models.ManyToManyField(Student, related_name='student_attendees')
     auth_uuid = models.UUIDField(default=uuid.uuid4, editable = False) # Generates authentication hash
+    register_taken = models.BooleanField(default = False)
 
     # Print event object as its event title
     def __str__(self): 
         return self.title
 
+    # Returns if event is currently happening
     def happening_now(self):
         if timezone.now() >= self.start_time and timezone.now() < self.end_time:
+            return True
+        else:
+            return False
+    
+    # Returns if event has started
+    def started(self):
+        if timezone.now() >= self.start_time:
             return True
         else:
             return False
@@ -59,7 +68,9 @@ class Attendance(models.Model):
 
 # Attendance verification model
 class Verification(models.Model):
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE) # if staff member is deleted, all verifications should also be deleted
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_to_verify') # if event is deleted, attendance verifications should also be deleted
-    student = models.ForeignKey(Event, on_delete=models.CASCADE)
-    verified = models.BooleanField(default = False)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    verification_time = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return f'Student {self.student.user.username} verification at {self.event.title}'

@@ -11,14 +11,25 @@
 
 
 {% block auth_info %}
-    {% if requested_user|has_group:"Students" %}
-        <li class="text-muted">
-            <b>Authenticated:</b>
-            {% if event|attendance_authenticated:requested_user %}
-                True
-            {% else %}
-                False
-            {% endif %}
-        </li>
+{% if requested_user|has_group:"Students" %}
+    <li class="text-muted">
+    <!-- user = logged in user -->
+        <b>Authentication Time:</b>
+        {% if event|attendance_authenticated:requested_user %}
+            {{ event|auth_time:requested_user|date:"d/m/y, H:i" }}
+        {% else %}
+            N/A
+        {% endif %}
+    </li>
+    <li class="text-muted">
+    {% if event.event_type != "LE" %}
+        <b>Verification Time:</b>
+        {% if event|attendance_verified:requested_user %}
+            {{ event|verification_time:requested_user|date:"d/m/y, H:i" }}
+        {% else %}
+            N/A
+        {% endif %}
     {% endif %}
+    </li>
+{% endif %}
 {% endblock auth_info %}

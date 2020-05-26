@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h2>Take Register for {{ event.title }}</h2>
+<form method="POST">
+    <!-- token used to protect forms against certain attacks - required by Django-->
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <!-- Bootstrap class for forms, fieldset groups related elements in a form -->
+    <fieldset class="form-group">
+        <!-- Another bootstrap class (adds a bottom border and bottom margin of 4) - legend gives the form more detail -->
+        <!-- Include form variable from context. use crispy filter for styling -->
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Present? (Default: Absent)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form, auth_student in list %}
+                    <tr>
+                        <td>{{ auth_student.student.user.first_name }} {{auth_student.student.user.last_name }}</td>
+                        <td><img src="{{ auth_student.student.user.profile.image.url }}" class="rounded-circle article-img"></td>
+                        <td>
+                            {{ form|crispy }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+    <!-- Submit button -->
+    <div class="form-group">
+        <button class="btn btn-outline-info" type="submit">Submit</button>
+    </div>
+</form>
+{% endblock content %}

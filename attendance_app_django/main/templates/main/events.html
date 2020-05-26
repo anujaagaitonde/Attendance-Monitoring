@@ -26,18 +26,28 @@
                         <li class="text-muted"><b>End Time:</b> {{ event.end_time|date:"d/m/y, H:i" }}</li>
                         <li class="text-muted"><b>Leader:</b> {{ event.leader }}</li>
                         {% block auth_info %}
-                            {% if user|has_group:"Students" %}
-                                <li class="text-muted">
-                                    <b>Authentication Time:</b>
-                                    {% if event|attendance_authenticated:user %}
-                                        {{ event|auth_time:user|date:"d/m/y, H:i" }}
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </li>
+                        {% if user|has_group:"Students" %}
+                        <li class="text-muted">
+                        <!-- user = logged in user -->
+                            <b>Authentication Time:</b>
+                            {% if event|attendance_authenticated:user %}
+                                {{ event|auth_time:user|date:"d/m/y, H:i" }}
+                            {% else %}
+                                N/A
                             {% endif %}
+                        </li>
+                        <li class="text-muted">
+                            {% if event.event_type != "LE" %}
+                                <b>Verification Time:</b>
+                                {% if event|attendance_verified:user %}
+                                    {{ event|verification_time:user|date:"d/m/y, H:i" }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            {% endif %}
+                        </li>
+                    {% endif %}
                         {% endblock auth_info %}
-                        <li class="text-muted"><b>UUID:</b> {{ event.auth_uuid }}</li>
                     </ul>
                 </div>
             </div>

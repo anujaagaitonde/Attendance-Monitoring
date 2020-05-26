@@ -14,10 +14,16 @@
             {% endif %}
             <div>
                 {% if not user|has_group:'Students' %}
-                {% if object.happening_now %}
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'event-QR' object.id %}">Show QR Code</a>
-                {% endif %}
-                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Take Register</a>
+                    {% if object.happening_now %}
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'event-QR' object.id %}">Show QR Code</a>
+                    {% endif %}
+                    {% if object.started and object.event_type != "LE" %}
+                        {% if object.register_taken %}
+                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'event-register' object.id %}">Edit Register</a>
+                        {% else %}
+                            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'event-register' object.id %}">Take Register</a>
+                        {% endif %}
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
@@ -28,18 +34,27 @@
                 <li class="text-muted"><b>Start Time:</b> {{ event.start_time|date:"d/m/y, H:i" }}</li>
                 <li class="text-muted"><b>End Time:</b> {{ event.end_time|date:"d/m/y, H:i" }}</li>
                 <li class="text-muted"><b>Leader:</b> {{ object.leader }}</li>
-                <li class="text-muted">
-                    {% if user|has_group:"Students" %}
+                {% if user|has_group:"Students" %}
+                    <li class="text-muted">
                     <!-- user = logged in user -->
-                    <b>Authentication Time:</b>
-                    {% if event|attendance_authenticated:user %}
-                        {{ event|auth_time:user|date:"d/m/y, H:i" }}
-                    {% else %}
-                        N/A
+                        <b>Authentication Time:</b>
+                        {% if object|attendance_authenticated:user %}
+                            {{ object|auth_time:user|date:"d/m/y, H:i" }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </li>
+                <li class="text-muted">
+                    {% if object.event_type != "LE" %}
+                        <b>Verification Time:</b>
+                        {% if object|attendance_verified:user %}
+                            {{ object|verification_time:user|date:"d/m/y, H:i" }}
+                        {% else %}
+                            N/A
+                        {% endif %}
                     {% endif %}
                 </li>
                 {% endif %}
-                <li class="text-muted"><b>UUID:</b> {{ object.auth_uuid }}</li>
             </ul>
         </div>
         <div>
@@ -61,6 +76,3 @@
     </div>
 </article>
 {% endblock content %}
-
-<!-- Add logic to display QR code if user = staff and event is currently happening -->
-<!-- Add links to view a student's profile -->
