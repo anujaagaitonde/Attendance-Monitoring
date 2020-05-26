@@ -154,6 +154,8 @@ def get_attendance_auth(request):
                         else:
                             auth = Attendance.objects.create(student=user.student, event=event, auth_time=timezone.now())
                             auth.save()
+                            event.register_taken = False # Need to retake register if another student has authenticated their attendance
+                            event.save()
                             messages.success(request, f'Attendance authenticated successfully!') # one time success message
                             return redirect(event.get_absolute_url()) # Redirect to event-detail page of authenticated event
                     else: 
