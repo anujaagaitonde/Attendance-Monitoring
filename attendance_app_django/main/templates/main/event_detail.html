@@ -9,15 +9,15 @@
         <!-- Display event details -->
         <div class="article-header">
             <h2 class="article-title">{{ object.title }}</h2>
-                {% if object.happening_now %}
-                    <div class="article-status">Now</div>
-                {% endif %}
+            {% if object.happening_now %}
+            <div class="article-status">Now</div>
+            {% endif %}
             <div>
                 {% if not user|has_group:'Students' %}
-                    {% if object.happening_now %}
-                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'event-QR' object.id %}">Show QR Code</a>
-                    {% endif %}
-                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Take Register</a>
+                {% if object.happening_now %}
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'event-QR' object.id %}">Show QR Code</a>
+                {% endif %}
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Take Register</a>
                 {% endif %}
             </div>
         </div>
@@ -25,16 +25,17 @@
             <ul class="list-unstyled">
                 <li class="text-secondary"><b>Event Type:</b> {{ object.get_event_type_display }}</li>
                 <li class="text-muted"><b>Location:</b> {{ object.location }}</li>
-                <li class="text-muted"><b>Start Time:</b> {{ object.start_time }}</li>
-                <li class="text-muted"><b>End Time:</b> {{ object.end_time }}</li>
+                <li class="text-muted"><b>Start Time:</b> {{ event.start_time|date:"d/m/y, H:i" }}</li>
+                <li class="text-muted"><b>End Time:</b> {{ event.end_time|date:"d/m/y, H:i" }}</li>
                 <li class="text-muted"><b>Leader:</b> {{ object.leader }}</li>
                 <li class="text-muted">
-                {% if user|has_group:"Students" %} <!-- user = logged in user -->
-                    <b>Authenticated:</b>
-                    {% if object|attendance_authenticated:user %}
-                        True
+                    {% if user|has_group:"Students" %}
+                    <!-- user = logged in user -->
+                    <b>Authentication Time:</b>
+                    {% if event|attendance_authenticated:user %}
+                        {{ event|auth_time:user|date:"d/m/y, H:i" }}
                     {% else %}
-                        False
+                        N/A
                     {% endif %}
                 </li>
                 {% endif %}
@@ -47,9 +48,10 @@
             <ul class="list-unstyled">
                 <li class="text-muted"><b>Attendees:</b></li>
                 <small class="text-muted">
-                    {% for student in object.attendees.all %}
+                    {% for student in event.attendees.all %}
                     <ul class="list-unstyled">
-                        <li class="list-unstyled-item"><a href="{% url 'user-profile' student.user.username %}">{{ student.user.username }}</a></li>
+                        <li class="list-unstyled-item"><a href="{% url 'user-profile' student.user.username %}">
+                            {{ student.user.username }}</a></li>
                     </ul>
                     {% endfor %}
                 </small></li>

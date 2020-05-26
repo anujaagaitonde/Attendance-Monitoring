@@ -8,3 +8,9 @@ register = template.Library() # Performs logic required in template in view
 def attendance_authenticated(event, user):
     from main.models import Attendance
     return Attendance.objects.filter(event=event, student=user.student).exists()
+
+@register.filter(name='auth_time')
+def auth_time(event, user):
+    from main.models import Attendance
+    attendance = Attendance.objects.get(event=event, student=user.student)
+    return attendance.auth_time

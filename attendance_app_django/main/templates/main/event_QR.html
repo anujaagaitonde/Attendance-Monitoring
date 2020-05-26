@@ -18,7 +18,9 @@
             <div class="container">
                 <div class="row">
                     <!-- QR code takes up entire width of container and stores auth uuid -->
-                    <img class="article-content col-md-12" src="https://api.qrserver.com/v1/create-qr-code/?data={{ event.auth_uuid }}&size=1000x1000" alt="QR code">
+                    <div class="article-content">
+                        <img class="qr-code col-md-12" src="https://api.qrserver.com/v1/create-qr-code/?data={{ event.auth_uuid }}&size=1000x1000" alt="QR code">
+                    </div>
                 </div>
             </div>
         </div>

@@ -122,7 +122,6 @@ class UserPastEventListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         user = get_object_or_404(User, username=self.kwargs.get('username')) # Class based view so requires kwargs.get to extract from URL
         context['requested_user'] = user
         return context
-
     
     # Only allow logged in user to access view if they are not a Student
     def test_func(self):
@@ -149,25 +148,20 @@ def get_attendance_auth(request):
                 if event.happening_now(): # Check if event is currently happening (cannot authenticate unless event is currently happening)
                     if event.attendees.filter(user=user).exists(): # Check if the student is supposed to be attending the event
                         if Attendance.objects.filter(student=user.student, event=event).exists(): # If event already authenticated
-                            print("attendance already authenticated")
                             messages.info(request, f'Attendance already authenticated')
                             return redirect(event.get_absolute_url()) # Redirect to event-detail page of authenticated event
                         else:
                             auth = Attendance.objects.create(student=user.student, event=event, auth_time=timezone.now())
                             auth.save()
                             messages.success(request, f'Attendance authenticated successfully!') # one time success message
-                            print("Attendance authenticated successfully!")
                             return redirect(event.get_absolute_url()) # Redirect to event-detail page of authenticated event
                     else: 
-                        print("Unauthorised auth hash")
                         messages.error(request, f'Unauthorised authentication hash') # Display one time error message - student has tried to authenticate attendance at an event they aren't supposed to be attending
                         return redirect('main-home') # If there is any kind of error, redirect back to form page
                 else: 
-                    print("event not happening now")
                     messages.error(request, f'Event is not happening now')
                     return redirect('main-home')
             else:
-                print("invalid auth hash")
                 messages.error(request, f'Invalid authentication hash')
                 return redirect('main-home')
         else: 

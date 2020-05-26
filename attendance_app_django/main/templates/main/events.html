@@ -5,7 +5,7 @@
 
 {% block content %}
     {% block upcoming_or_past %}
-        <h1>Upcoming Events ({{ page_obj.paginator.count }})</h1> <!-- Display number of upcoming events for this user -->
+        <h2>Upcoming Events ({{ page_obj.paginator.count }})</h2> <!-- Display number of upcoming events for this user -->
         <h6><a class="subtitle" href="{% url 'my-past-events' %}">View Past Events</a></h6>
     {% endblock upcoming_or_past %}
     {% for event in events %}
@@ -13,7 +13,7 @@
             <div class="media-body">
                 <!-- Display event details -->
                 <div class="article-header">
-                    <h2><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h2>
+                    <h3><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h3>
                     {% if event.happening_now %}
                         <div class="article-status">Now</div>
                     {% endif %}
@@ -22,17 +22,17 @@
                     <ul class="list-unstyled">
                         <li class="text-secondary"><b>Event Type:</b> {{ event.get_event_type_display }}</li>
                         <li class="text-muted"><b>Location:</b> {{ event.location }}</li>
-                        <li class="text-muted"><b>Start Time:</b> {{ event.start_time }}</li>
-                        <li class="text-muted"><b>End Time:</b> {{ event.end_time }}</li>
+                        <li class="text-muted"><b>Start Time:</b> {{ event.start_time|date:"d/m/y, H:i" }}</li>
+                        <li class="text-muted"><b>End Time:</b> {{ event.end_time|date:"d/m/y, H:i" }}</li>
                         <li class="text-muted"><b>Leader:</b> {{ event.leader }}</li>
                         {% block auth_info %}
                             {% if user|has_group:"Students" %}
                                 <li class="text-muted">
-                                    <b>Authenticated:</b>
+                                    <b>Authentication Time:</b>
                                     {% if event|attendance_authenticated:user %}
-                                        True
+                                        {{ event|auth_time:user|date:"d/m/y, H:i" }}
                                     {% else %}
-                                        False
+                                        N/A
                                     {% endif %}
                                 </li>
                             {% endif %}

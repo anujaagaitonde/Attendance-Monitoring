@@ -26,7 +26,7 @@ SECRET_KEY = 'gn)rqfveb7_2gp_^exgl5ez_hm@(j)a&bgdytpopf)_$v+f&wt'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.66','localhost']
 
 
 # Application definition
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'users.templatetags.user_extras',
     'main.templatetags.event_extras',
+    'sslserver',
 ]
 
 MIDDLEWARE = [

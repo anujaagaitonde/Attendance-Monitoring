@@ -8,6 +8,10 @@ body {
     color: #444444;
   }
 
+  h2{
+    font-size: 2rem;
+  }
+
   h1 a{
     color: #444444;
   }
@@ -31,7 +35,7 @@ body {
   }
 
   .subtitle{
-    color: #444444;
+    color: #575656;
   }
   
   a.subtitle:hover {
@@ -63,6 +67,7 @@ body {
     margin-bottom: 20px;
   }
 
+
   .article-header{
     padding-bottom: 10px;
     border-bottom: 1px solid #e3e3e3;
@@ -74,6 +79,7 @@ body {
 
   .article-header .article-status {
     color: #009945;
+    font-size: 1rem;
     padding-bottom: 10px;
   }
   
@@ -84,6 +90,11 @@ body {
   
   .article-content {
     white-space: pre-line;
+  }
+
+  .article-content .qr-code img{
+    width: 100%;
+    height: 100%;
   }
   
   .article-img {
@@ -117,5 +128,5 @@ body {
   }
   
   .account-heading {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }

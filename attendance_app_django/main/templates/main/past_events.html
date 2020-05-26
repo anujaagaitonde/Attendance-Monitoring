@@ -1,6 +1,6 @@
 {% extends 'main/events.html' %}
 
 {% block upcoming_or_past %}
-    <h1>Past Events ({{ page_obj.paginator.count }})</h1> <!-- Display number of upcoming events for this user -->
+    <h2>Past Events ({{ page_obj.paginator.count }})</h2> <!-- Display number of upcoming events for this user -->
     <h6><a class="subtitle" href="{% url 'my-events' %}">View Upcoming Events</a></h6>
 {% endblock upcoming_or_past %}

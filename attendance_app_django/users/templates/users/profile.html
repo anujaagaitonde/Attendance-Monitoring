@@ -5,38 +5,43 @@
 
 {% block content %}
 <!-- Apply Bootstrap and static CSS styling -->
-    <div class = "content-section">
-        <div class="media">
-            <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
-            <div class="media-body">
+<div class="content-section">
+    <div class="media">
+        <div class="row">
+            <div class="col-md-4">
+                <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+            </div>
+            <div class="media-body col-md-8">
                 <h2 class="account-heading">{{ user.first_name }} {{ user.last_name }}</h2>
                 <ul class="list-unstyled">
-                    <li class="text-secondary"><b>Username: </b>{{ user.username }}</li>
-                    <li class="text-secondary"><b>Email: </b>{{ user.email }}</li>
-                {% if user|has_group:"Students" %}
+                    <li class="text-muted"><b>Username: </b>{{ user.username }}</li>
+                    <li class="text-muted"><b>Email: </b>{{ user.email }}</li>
+                    {% if user|has_group:"Students" %}
                     <li class="text-muted"><b>Course: </b>{{ user.student.course }}</li>
                     <li class="text-muted"><b>Year: </b>{{ user.student.year }}</li>
-                {% endif %}
-                </ul>   
+                    {% endif %}
+                </ul>
             </div>
         </div>
-        {% block profile_form %}
-        <!-- enctype allows image data to be passed -->
-        <form method="POST" enctype="multipart/form-data">
-            <!-- token used to protect forms against certain attacks - required by Django-->
-            {% csrf_token %}
-            <!-- Bootstrap class for forms, fieldset groups related elements in a form -->
-            <fieldset class = "form-group"> 
-                <!-- Another bootstrap class (adds a bottom border and bottom margin of 4) - legend gives the form more detail -->
-                <legend class = "border-bottom mb-4">Profile Info</legend>
-                <!-- Include form variable from context. use crispy filter for styling -->
-                {{ p_form|crispy }}
-            </fieldset>
-            <!-- Submit button -->
-            <div class ="form-group">
-                <button class="btn btn-outline-info" type="submit">Update</button>
-            </div>
-        </form>
-        {% endblock profile_form %}
     </div>
+    {% block profile_form %}
+
+    <!-- enctype allows image data to be passed -->
+    <form method="POST" enctype="multipart/form-data" class="mt-3">
+        <!-- token used to protect forms against certain attacks - required by Django-->
+        {% csrf_token %}
+        <!-- Bootstrap class for forms, fieldset groups related elements in a form -->
+        <fieldset class="form-group">
+            <!-- Another bootstrap class (adds a bottom border and bottom margin of 4) - legend gives the form more detail -->
+            <legend class="border-bottom mb-4">Profile Info</legend>
+            <!-- Include form variable from context. use crispy filter for styling -->
+            {{ p_form|crispy }}
+        </fieldset>
+        <!-- Submit button -->
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Update</button>
+        </div>
+    </form>
+    {% endblock profile_form %}
+</div>
 {% endblock content %}

@@ -13,10 +13,10 @@
     <!-- Add author profile image -->
     <div class="media-body">
         <div class="article-header">
-            <h2 class="article-title">Scan QR Code To Authenticate Attendance</h2>
+            <h2 class="article-title">Scan Event QR Code</h2>
         </div>
         <div class="row">
-            <form method="POST" id="auth_form" class="col-md-12" style="display:none;">
+            <form method="POST" id="auth_form" class="col-md-12 mt-1" style="display:none;">
                 <!-- token used to protect forms against certain attacks - required by Django-->
                 {% csrf_token %}
                 <!-- Bootstrap class for forms, fieldset groups related elements in a form -->
