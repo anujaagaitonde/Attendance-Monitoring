@@ -68,7 +68,7 @@ class Attendance(models.Model):
 
 # Attendance verification model
 class Verification(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event_to_verify') # if event is deleted, attendance verifications should also be deleted
+    event = models.ForeignKey(Event, on_delete=models.CASCADE) # if event is deleted, attendance verifications should also be deleted
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     verification_time = models.DateTimeField(null=True)
 

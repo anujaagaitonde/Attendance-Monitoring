@@ -1,0 +1,63 @@
+{% extends 'main/base.html' %}
+
+{% load user_extras %}
+{% load event_extras %}
+
+{% block content %}
+    {% block upcoming_or_past %}
+        <h2>Outstanding Event Registers ({{ page_obj.paginator.count }})</h2> <!-- Display number of upcoming events for this user -->
+        <h6><a class="subtitle" href="{% url 'completed-registers' %}">View Completed Event Registers</a></h6>
+    {% endblock upcoming_or_past %}
+    {% for event in events %}
+        <article class="media content-section">
+            <div class="media-body">
+                <!-- Display event details -->
+                <div class="article-header">
+                    <h3><a class="article-title" href="{% url 'event-detail' event.id %}">{{ event.title }}</a></h3>
+                    {% if event.happening_now %}
+                        <div class="article-status">Now</div>
+                    {% endif %}
+                    {% block take_or_edit_register %}
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'event-register' event.id %}">Take Register</a>
+                    {% endblock take_or_edit_register %}
+                </div>
+                <div class="article-metadata">
+                    <ul class="list-unstyled">
+                        <li class="text-secondary"><b>Event Type:</b> {{ event.get_event_type_display }}</li>
+                        <li class="text-muted"><b>Location:</b> {{ event.location }}</li>
+                        <li class="text-muted"><b>Start Time:</b> {{ event.start_time|date:"d/m/y, H:i" }}</li>
+                        <li class="text-muted"><b>End Time:</b> {{ event.end_time|date:"d/m/y, H:i" }}</li>
+                        <li class="text-muted"><b>Leader:</b> {{ event.leader }}</li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    {% endfor %}
+    <!-- Pagination links -->
+    {% if is_paginated %}
+        
+        <!-- Add links to first and previous page if the current page has previous pages -->
+        {% if page_obj.has_previous %}
+            <a class="btn btn-outline-info mb-4" href="?page=1">First</a> <!-- First page -->
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %} <!-- Current page -->
+                <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a> <!-- Display link for current page -->
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a> <!-- display links for neighbouring pages -->
+            {% endif %}
+        {% endfor %}
+
+        <!-- Add links to next and last page if the current page isn't the last page -->
+        {% if page_obj.has_next %}
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+
+    {% endif %}
+{% endblock content %}
+
+<!-- Add logic to display QR code if user = staff and event is currently happening -->
+<!-- Add links to view a student's profile -->

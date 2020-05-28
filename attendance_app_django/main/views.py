@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.forms import formset_factory
 from django.http import HttpResponse
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -264,4 +265,52 @@ def take_register(request, pk):
 
     else: # Logged in user is not an admin user / staff leader
         return HttpResponse(status=403)
+    
 
+# List events with outstanding registers for a staff leader
+class StaffRegisterListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Event
+    template_name = 'main/register_list.html' # Override the template to search for, default = <app>/<model>_<viewtype>.html (main/event_list.html)
+    context_object_name = 'events' # Specify what variable name the objects in the list should be called, so they are looped as they were when using the function based view in the template
+    paginate_by = 5 # number of events to display per page
+
+    # Override default get_queryset to obtain a more specific queryset to be listed on the page
+    # Only view events with outstanding registers led by the logged in user (staff leader)
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name='Staff').exists():
+            return Event.objects.filter(leader=user.staff, start_time__lte=timezone.now(), register_taken=False).exclude(event_type="LE").order_by('-start_time')
+        elif user.groups.filter(name='Admin').exists(): # Admin users can view all events
+            return Event.objects.filter(start_time__lte=timezone.now(), register_taken=False).exclude(event_type="LE").order_by('-start_time')
+    
+    # Test function for UserPassesTest mixin
+    def test_func(self):
+        user = self.request.user
+        if user.groups.filter(name="Admin") or user.groups.filter(name="Staff"):
+            return True
+        else:
+            return False
+
+# List events with completed registers for a staff leader
+class StaffCompletedRegisterListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Event
+    template_name = 'main/past_register_list.html' # Override the template to search for, default = <app>/<model>_<viewtype>.html (main/event_list.html)
+    context_object_name = 'events' # Specify what variable name the objects in the list should be called, so they are looped as they were when using the function based view in the template
+    paginate_by = 5 # number of events to display per page
+
+    # Override default get_queryset to obtain a more specific queryset to be listed on the page
+    # Only view events with outstanding registers led by the logged in user (staff leader)
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name='Staff').exists():
+            return Event.objects.filter(leader=user.staff, start_time__lte=timezone.now(), register_taken=True).exclude(event_type="LE").order_by('-start_time')
+        elif user.groups.filter(name='Admin').exists(): # Admin users can view all events
+            return Event.objects.filter(start_time__lte=timezone.now(), register_taken=True).exclude(event_type="LE").order_by('-start_time')
+    
+    # Test function for UserPassesTest mixin
+    def test_func(self):
+        user = self.request.user
+        if user.groups.filter(name="Admin") or user.groups.filter(name="Staff"):
+            return True
+        else:
+            return False

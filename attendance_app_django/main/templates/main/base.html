@@ -1,5 +1,6 @@
 <!-- Load static folder containing HTML and JS -->
 {% load static %}
+{% load user_extras %}
 
 <!DOCTYPE html>
 
@@ -41,6 +42,9 @@
         <div class="navbar-nav mr-auto">
           <a class="nav-item nav-link" href="{% url 'main-home' %}">Scan</a>
           <a class="nav-item nav-link" href="{% url 'my-events' %}">My Events</a>
+          {% if user|has_group:"Staff" or user|has_group:"Admin" %}
+            <a class="nav-item nav-link" href="{% url 'outstanding-registers' %}">Outstanding Registers</a>
+          {% endif %}
         </div>
         <!-- Navbar Right Side -->
         <div class="navbar-nav">
@@ -69,20 +73,6 @@
       {% endif %}
       {% block content %}{% endblock content %}
     </div>
-    <!-- Sidebar: populate later if thisis a helpful addition -->
-    <!-- <div class="col-md-4">
-      <div class="content-section">
-        <h3>Our Sidebar</h3>
-        <p class='text-muted'>You can put any information here you'd like.
-          <ul class="list-group">
-            <li class="list-group-item list-group-item-light">Latest Posts</li>
-            <li class="list-group-item list-group-item-light">Announcements</li>
-            <li class="list-group-item list-group-item-light">Calendars</li>
-            <li class="list-group-item list-group-item-light">etc</li>
-          </ul>
-        </p>
-      </div>
-    </div> -->
   </div>
 </main>
 
