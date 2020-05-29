@@ -314,3 +314,247 @@ class StaffCompletedRegisterListView(LoginRequiredMixin, UserPassesTestMixin, Li
             return True
         else:
             return False
+
+
+# Show attendance record for the past two weeks for each student
+def attendance_record(request, username):
+    user = get_object_or_404(User, username=username)
+
+    # Only staff / admin can view attendance record of other students. Students can view their own attendance record
+    if request.user.groups.filter(name="Admin").exists() or request.user.groups.filter(name="Staff").exists() or request.user == user:            
+        
+        # Only students will have an attendance record
+        if user.groups.filter(name="Students"):
+            cutoff = timezone.now() - timezone.timedelta(days=14) # set 2 week time threshold
+
+            # Calculate attendance information
+            # Lectures
+            lec_count = Event.objects.filter(event_type="LE", attendees=user.student, start_time__gt=cutoff).count()
+            lec_auths_count = Attendance.objects.filter(student=user.student, event__event_type="LE", event__start_time__gt=cutoff).count()
+            if not lec_count == 0:
+                perc_lec_auths = round(lec_auths_count / lec_count * 100, 1) # Calculate lecture attendance as a % of lectures authenticated
+            else:
+                perc_lec_auths = 'N/A'
+            
+            lec_context = {
+                'num': lec_count,
+                'auths_count': lec_auths_count,
+                'perc_auths': perc_lec_auths
+            }
+
+            # Tutorials
+            tut_count = Event.objects.filter(event_type="TU", attendees=user.student, start_time__gt=cutoff).count()
+            tut_auths_count = Attendance.objects.filter(student=user.student, event__event_type="TU", event__start_time__gt=cutoff).count()
+            tut_regs_count = Verification.objects.filter(student=user.student, event__event_type="TU", event__start_time__gt=cutoff).count()
+            if not tut_count == 0:
+                perc_tut_auths = round(tut_auths_count / tut_count * 100, 1) # Calculate tutorial attendance as a % of tutorials authenticated
+                perc_tut_regs = round(tut_regs_count / tut_count * 100, 1) # Calculate tutorial attendance as a % of tutorials registered by staff
+            else:
+                perc_tut_auths = 'N/A'
+                perc_tut_regs = 'N/A'
+
+            tut_context = {
+                'num': tut_count,
+                'auths_count': tut_auths_count,
+                'regs_count': tut_regs_count,
+                'perc_auths': perc_tut_auths,
+                'perc_regs': perc_tut_regs
+            }
+
+            # Exams
+            exam_count = Event.objects.filter(event_type="EX", attendees=user.student, start_time__gt=cutoff).count()
+            exam_auths_count = Attendance.objects.filter(student=user.student, event__event_type="EX", event__start_time__gt=cutoff).count()
+            exam_regs_count = Verification.objects.filter(student=user.student, event__event_type="EX", event__start_time__gt=cutoff).count()
+            if not exam_count == 0:
+                perc_exam_auths = round(exam_auths_count / exam_count * 100, 1) # Calculate exam attendance as a % of exams authenticated, rounded to 1 dp
+                perc_exam_regs = round(exam_regs_count / exam_count * 100, 1) # Calculate exam attendance as a % of exams registered by staff
+            else:
+                perc_exam_auths = 'N/A'
+                perc_exam_regs = 'N/A'
+
+            exam_context = {
+                'num': exam_count,
+                'auths_count': exam_auths_count,
+                'regs_count': exam_regs_count,
+                'perc_auths': perc_exam_auths,
+                'perc_regs': perc_exam_regs
+            }
+
+            # Study Groups / Lab sessions
+            sg_count = Event.objects.filter(event_type="SG", attendees=user.student, start_time__gt=cutoff).count()
+            sg_auths_count = Attendance.objects.filter(student=user.student, event__event_type="SG", event__start_time__gt=cutoff).count()
+            sg_regs_count = Verification.objects.filter(student=user.student, event__event_type="SG", event__start_time__gt=cutoff).count()
+            if not sg_count == 0:
+                perc_sg_auths = round(sg_auths_count / sg_count * 100, 1) # Calculate study group attendance as a % of study groups authenticated
+                perc_sg_regs = round(sg_regs_count / sg_count * 100, 1) # Calculate exam study group as a % of study groups registered by staff
+            else:
+                perc_sg_auths = 'N/A'
+                perc_sg_regs = 'N/A'
+            
+            sg_context = {
+                'num': sg_count,
+                'auths_count': sg_auths_count,
+                'regs_count': sg_regs_count,
+                'perc_auths': perc_sg_auths,
+                'perc_regs': perc_sg_regs
+            }
+
+            # Overall
+            event_count_auth = lec_count + tut_count + exam_count + sg_count
+            event_count_regs = tut_count + exam_count + sg_count # Lectures are not verified by staff members
+            auths_count = lec_auths_count + tut_auths_count + exam_auths_count + sg_auths_count
+            regs_count = tut_regs_count + exam_regs_count + sg_regs_count
+            if not event_count_auth == 0:
+                perc_auths = round(auths_count / event_count_auth * 100, 1)
+            else:
+                perc_auths = 'N/A'
+            if not event_count_regs == 0:
+                perc_regs = round(regs_count / event_count_regs * 100, 1)
+            else:
+                perc_regs = 'N/A'
+
+            total_context = {
+                'num_auth': event_count_auth,
+                'num_reg': event_count_regs,
+                'auths_count': auths_count,
+                'regs_count': regs_count,
+                'perc_auths': perc_auths,
+                'perc_regs': perc_regs
+            }
+
+            context = {
+                'requested_user': user,
+                'lec': lec_context,
+                'tut': tut_context,
+                'exam': exam_context,
+                'sg': sg_context,
+                'total': total_context
+            }
+
+            return render(request, 'main/attendance_record.html', context)
+                        
+        else:
+            return HttpResponse(status=404) # 404 = Page not found (attendance record only exists if the requested user is a student)
+    else:
+        return HttpResponse(status=403)
+
+
+# Show attendance record for all time
+def attendance_record_all_time(request, username):
+    user = get_object_or_404(User, username=username)
+
+    # Only staff / admin can view attendance record of other students. Students can view their own attendance record
+    if request.user.groups.filter(name="Admin").exists() or request.user.groups.filter(name="Staff").exists() or request.user == user:            
+        
+        # Only students will have an attendance record
+        if user.groups.filter(name="Students"):
+            # Calculate attendance information
+            # Lectures
+            lec_count = Event.objects.filter(event_type="LE", attendees=user.student).count()
+            lec_auths_count = Attendance.objects.filter(student=user.student, event__event_type="LE").count()
+            if not lec_count == 0:
+                perc_lec_auths = round(lec_auths_count / lec_count * 100, 1) # Calculate lecture attendance as a % of lectures authenticated
+            else:
+                perc_lec_auths = 'N/A'
+            
+            lec_context = {
+                'num': lec_count,
+                'auths_count': lec_auths_count,
+                'perc_auths': perc_lec_auths
+            }
+
+            # Tutorials
+            tut_count = Event.objects.filter(event_type="TU", attendees=user.student).count()
+            tut_auths_count = Attendance.objects.filter(student=user.student, event__event_type="TU").count()
+            tut_regs_count = Verification.objects.filter(student=user.student, event__event_type="TU").count()
+            if not tut_count == 0:
+                perc_tut_auths = round(tut_auths_count / tut_count * 100, 1) # Calculate tutorial attendance as a % of tutorials authenticated
+                perc_tut_regs = round(tut_regs_count / tut_count * 100, 1) # Calculate tutorial attendance as a % of tutorials registered by staff
+            else:
+                perc_tut_auths = 'N/A'
+                perc_tut_regs = 'N/A'
+
+            tut_context = {
+                'num': tut_count,
+                'auths_count': tut_auths_count,
+                'regs_count': tut_regs_count,
+                'perc_auths': perc_tut_auths,
+                'perc_regs': perc_tut_regs
+            }
+
+            # Exams
+            exam_count = Event.objects.filter(event_type="EX", attendees=user.student).count()
+            exam_auths_count = Attendance.objects.filter(student=user.student, event__event_type="EX").count()
+            exam_regs_count = Verification.objects.filter(student=user.student, event__event_type="EX").count()
+            if not exam_count == 0:
+                perc_exam_auths = round(exam_auths_count / exam_count * 100, 1) # Calculate exam attendance as a % of exams authenticated, rounded to 1 dp
+                perc_exam_regs = round(exam_regs_count / exam_count * 100, 1) # Calculate exam attendance as a % of exams registered by staff
+            else:
+                perc_exam_auths = 'N/A'
+                perc_exam_regs = 'N/A'
+
+            exam_context = {
+                'num': exam_count,
+                'auths_count': exam_auths_count,
+                'regs_count': exam_regs_count,
+                'perc_auths': perc_exam_auths,
+                'perc_regs': perc_exam_regs
+            }
+
+            # Study Groups / Lab sessions
+            sg_count = Event.objects.filter(event_type="SG", attendees=user.student).count()
+            sg_auths_count = Attendance.objects.filter(student=user.student, event__event_type="SG").count()
+            sg_regs_count = Verification.objects.filter(student=user.student, event__event_type="SG").count()
+            if not sg_count == 0:
+                perc_sg_auths = round(sg_auths_count / sg_count * 100, 1) # Calculate study group attendance as a % of study groups authenticated
+                perc_sg_regs = round(sg_regs_count / sg_count * 100, 1) # Calculate exam study group as a % of study groups registered by staff
+            else:
+                perc_sg_auths = 'N/A'
+                perc_sg_regs = 'N/A'
+            
+            sg_context = {
+                'num': sg_count,
+                'auths_count': sg_auths_count,
+                'regs_count': sg_regs_count,
+                'perc_auths': perc_sg_auths,
+                'perc_regs': perc_sg_regs
+            }
+
+            # Overall
+            event_count_auth = lec_count + tut_count + exam_count + sg_count
+            event_count_regs = tut_count + exam_count + sg_count # Lectures are not verified by staff members
+            auths_count = lec_auths_count + tut_auths_count + exam_auths_count + sg_auths_count
+            regs_count = tut_regs_count + exam_regs_count + sg_regs_count
+            if not event_count_auth == 0:
+                perc_auths = round(auths_count / event_count_auth * 100, 1)
+            else:
+                perc_auths = 'N/A'
+            if not event_count_regs == 0:
+                perc_regs = round(regs_count / event_count_regs * 100, 1)
+            else:
+                perc_regs = 'N/A'
+
+            total_context = {
+                'num_auth': event_count_auth,
+                'num_reg': event_count_regs,
+                'auths_count': auths_count,
+                'regs_count': regs_count,
+                'perc_auths': perc_auths,
+                'perc_regs': perc_regs
+            }
+
+            context = {
+                'requested_user': user,
+                'lec': lec_context,
+                'tut': tut_context,
+                'exam': exam_context,
+                'sg': sg_context,
+                'total': total_context
+            }
+
+            return render(request, 'main/attendance_record_all_time.html', context)
+                        
+        else:
+            return HttpResponse(status=404) # 404 = Page not found (attendance record only exists if the requested user is a student)
+    else:
+        return HttpResponse(status=403)

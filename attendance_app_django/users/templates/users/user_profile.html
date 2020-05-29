@@ -2,13 +2,11 @@
 
 {% load user_extras %}
 
+{% block record %}
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'user-events' user.username %}">View Events</a>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'user-attendance-record' user.username %}">View Attendance Record</a>
+{% endblock record %}
+
 {% block profile_form %}
-    <div class="mt-2">
-        <!-- Only students have attendance record / can have their events viewed by another user -->
-        <!-- context passed in = user (requested user, not logged in user) -->
-        {% if user|has_group:"Students" %}
-            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'user-events' user.username %}">View Events</a>
-            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">View Attendance Record</a>
-        {% endif %}
-    </div>
 {% endblock profile_form %}
+

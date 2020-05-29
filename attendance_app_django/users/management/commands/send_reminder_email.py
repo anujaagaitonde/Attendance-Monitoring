@@ -20,7 +20,7 @@ class Command(BaseCommand):
             dl = list(dt)
             # Only send an email to that user if they have outstanding registers from events that occurred more than one week ago
             num_outstanding_regs = Event.objects.filter(
-                leader=user.staff, register_taken=False, start_time__lte= cutoff).exclude(event_type="LE").count()
+                leader=user.staff, register_taken=False, start_time__lt= cutoff).exclude(event_type="LE").count()
             if num_outstanding_regs > 1:
                 # Create email data
                 data = ('Check Imperial Attendance App', 'Dear '+str(user.username)+',\n\nYou have '+str(num_outstanding_regs) +

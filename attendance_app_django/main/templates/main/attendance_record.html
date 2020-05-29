@@ -1,0 +1,71 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+{% block title %}
+    <h2><a href="{% url 'user-profile' requested_user.username %}">{{ requested_user.username }}</a>'s Attendance Record</h2>
+    <h4>(Past 2 Weeks)</h4>
+    <h6><a class="subtitle" href="{% url 'user-attendance-record-all-time' requested_user.username %}">View Attendance Record for All Time</a></h6>
+{% endblock title %}
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Event Type</th>
+                <th scope="col">Number</th>
+                <th scope="col">Number Attended</th>
+                <th scope="col">Number Verified</th>
+                <th scope="col">Attendance %</th>
+                <th scope="col">Verification %</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">Lecture</th>
+                <td>{{ lec.num }}</td>
+                <td>{{ lec.auths_count }}</td>
+                <td>N/A*</td>
+                <td>{{ lec.perc_auths }}</td>
+                <td>N/A*</td>
+            </tr>
+            <tr>
+                <th scope="row">Tutorial</th>
+                <td>{{ tut.num }}</td>
+                <td>{{ tut.auths_count }}</td>
+                <td>{{ tut.regs_count }}</td>
+                <td>{{ tut.perc_auths }}</td>
+                <td>{{ tut.perc_regs }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Examination</th>
+                <td>{{ exam.num }}</td>
+                <td>{{ exam.auths_count }}</td>
+                <td>{{ tut.regs_count }}</td>
+                <td>{{ exam.perc_auths }}</td>
+                <td>{{ tut.perc_regs }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Study Group</th>
+                <td>{{ sg.num }}</td>
+                <td>{{ sg.auths_count }}</td>
+                <td>{{ sg.regs_count }}</td>
+                <td>{{ sg.perc_auths }}</td>
+                <td>{{ sg.perc_regs }}</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th scope="row">Overall *</th>
+                <th>{{ total.num_auth }}</th>
+                <th>{{ total.auths_count }}</th>
+                <th>{{ total.regs_count }}</th>
+                <th>{{ total.perc_auths }}</th>
+                <th>{{ total.perc_regs }}</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<small>* Lectures don't require verification</small>
+    
+{% endblock content %}

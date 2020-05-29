@@ -12,6 +12,8 @@ urlpatterns = [
     path('registers/completed/', StaffCompletedRegisterListView.as_view(), name='completed-registers'),
     path('<str:username>/events/', UserEventListView.as_view(), name='user-events'),
     path('<str:username>/events/past/', UserPastEventListView.as_view(), name='user-past-events'),
+    path('<str:username>/record/', views.attendance_record, name='user-attendance-record'), # Default = 2 weeks
+    path('<str:username>/record/all_time/', views.attendance_record_all_time, name='user-attendance-record-all-time'),
     path('event/<int:pk>/', EventDetailView.as_view(), name='event-detail'), # DetailView by default expects the pk of the object's whose details are to be shown to be part of the URL path
     path('event/<int:pk>/QR/', GenerateQR.as_view(), name='event-QR'), # Display QR code for event
     path('event/<int:pk>/register/', views.take_register, name='event-register'), # Electronic register for each event

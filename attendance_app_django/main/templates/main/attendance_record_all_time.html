@@ -1,0 +1,7 @@
+{% extends 'main/attendance_record.html' %}
+
+{% block title %}
+    <h2><a href="{% url 'user-profile' requested_user.username %}">{{ requested_user.username }}</a>'s Attendance Record</h2>
+    <h4>(All Time)</h4>
+    <h6><a class="subtitle" href="{% url 'user-attendance-record' requested_user.username %}">View Attendance Record for the Past 2 Weeks</a></h6>
+{% endblock title %}

@@ -23,7 +23,9 @@ body {
   
   ul {
     margin: 0;
+    color: #444444;
   }
+
 
   li a{
     color: #444444;
@@ -35,7 +37,7 @@ body {
   }
 
   .subtitle{
-    color: #575656;
+    color: #5f788a;
   }
   
   a.subtitle:hover {

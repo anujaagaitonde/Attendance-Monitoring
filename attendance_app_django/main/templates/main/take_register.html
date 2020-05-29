@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h2>Take Register for {{ event.title }}</h2>
+<h2>Take Register for <a href="{% url 'event-detail' event.pk %}">{{ event.title }}</h2>
 <form method="POST">
     <!-- token used to protect forms against certain attacks - required by Django-->
     {% csrf_token %}
