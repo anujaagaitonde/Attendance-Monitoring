@@ -38,11 +38,13 @@ def user_profile(request, username):
 
     user = get_object_or_404(User, username=username) # extract username from URL   
     
-    # If the logged in user is trying to view their own profile, redirect to profile view
+    # Logged in user can only view another user's profile if they are a staff/ admin user
     if request.user.groups.filter(name="Admin").exists() or request.user.groups.filter(name="Staff").exists():
         context = {
             'user': user
         }
         return render(request, 'users/user_profile.html', context)
+    elif request.user == user:
+        return redirect('profile') # If the logged in user is trying to view their own profile, redirect to profile view
     else:
         return HttpResponse(status=403)  # Students shouldn't be able to see other profiles

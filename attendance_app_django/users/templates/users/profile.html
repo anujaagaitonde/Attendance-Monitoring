@@ -17,13 +17,13 @@
                     <li class="text-muted"><b>Username: </b>{{ user.username }}</li>
                     <li class="text-muted"><b>Email: </b>{{ user.email }}</li>
                     {% if user|has_group:"Students" %}
+                    <li class="text-muted"><b>Course: </b>{{ user.student.course }}</li>
+                    <li class="text-muted"><b>Year: </b>{{ user.student.year }}</li>
                     <div class="mt-1 pt-1 border-top">
                         {% block record %}
                             <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'user-attendance-record' user.username %}">View Attendance Record</a>
                         {% endblock record %} 
                     </div>
-                    <li class="text-muted"><b>Course: </b>{{ user.student.course }}</li>
-                    <li class="text-muted"><b>Year: </b>{{ user.student.year }}</li>
                     {% endif %}
                 </ul>
             </div>

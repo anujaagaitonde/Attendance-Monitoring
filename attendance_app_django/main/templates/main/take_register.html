@@ -25,7 +25,7 @@
                 <tbody>
                     {% for form, auth_student in list %}
                     <tr>
-                        <td>{{ auth_student.student.user.first_name }} {{auth_student.student.user.last_name }}</td>
+                        <td><a href="{% url 'user-profile' auth_student.student.user.username %}">{{ auth_student.student.user.first_name }} {{auth_student.student.user.last_name }}</a></td>
                         <td><img src="{{ auth_student.student.user.profile.image.url }}" class="rounded-circle article-img"></td>
                         <td>
                             {{ form|crispy }}

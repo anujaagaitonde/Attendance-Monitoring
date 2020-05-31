@@ -36,6 +36,15 @@ body {
     text-decoration: none;
   }
 
+  td a{
+    color: #444444;
+  }
+
+  td a:hover{
+    color: #428bca;
+    text-decoration: none;
+  }
+
   .subtitle{
     color: #5f788a;
   }

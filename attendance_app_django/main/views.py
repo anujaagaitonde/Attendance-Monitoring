@@ -317,6 +317,7 @@ class StaffCompletedRegisterListView(LoginRequiredMixin, UserPassesTestMixin, Li
 
 
 # Show attendance record for the past two weeks for each student
+@login_required
 def attendance_record(request, username):
     user = get_object_or_404(User, username=username)
 
@@ -440,6 +441,7 @@ def attendance_record(request, username):
 
 
 # Show attendance record for all time
+@login_required
 def attendance_record_all_time(request, username):
     user = get_object_or_404(User, username=username)
 
@@ -558,3 +560,33 @@ def attendance_record_all_time(request, username):
             return HttpResponse(status=404) # 404 = Page not found (attendance record only exists if the requested user is a student)
     else:
         return HttpResponse(status=403)
+
+class EventAttendanceRecord(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Event
+    template_name = 'main/event_attendance_record.html'
+    context_object_name = 'events'
+
+    # Add authentication / verification statistics
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = get_object_or_404(Event, pk=self.kwargs.get('pk'))
+        num_attendees = event.attendees.count()
+        num_auths = Attendance.objects.filter(event=event).count()
+        num_regs = Verification.objects.filter(event=event).count()
+        if not num_attendees == 0:
+            perc_auth = round(num_auths / num_attendees * 100, 1)
+            perc_reg = round(num_regs / num_attendees * 100, 1)
+        else:
+            perc_auth = 'N/A'
+            perc_reg = 'N/A'
+        context['perc_auth'] = perc_auth
+        context['perc_reg'] = perc_reg
+        return context
+    
+    # Only allow logged in user to access view if they are not a Student
+    def test_func(self):
+        active_user = self.request.user
+        if active_user.groups.filter(name="Admin") or active_user.groups.filter(name="Staff"):
+            return True
+        else:
+            return False

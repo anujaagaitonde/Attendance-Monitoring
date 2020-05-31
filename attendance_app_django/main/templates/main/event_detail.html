@@ -24,6 +24,9 @@
                             <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'event-register' object.id %}">Take Register</a>
                         {% endif %}
                     {% endif %}
+                    {% if object.started %}
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'event-attendance-record' object.id %}">View Attendance Record</a>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
