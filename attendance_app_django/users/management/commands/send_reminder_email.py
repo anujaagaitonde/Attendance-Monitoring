@@ -6,7 +6,7 @@ from main.models import Event
 
 
 class Command(BaseCommand):
-    help = 'Sends reminder emails'
+    help = 'Sends reminder emails to staff members'
 
     # Business logic to send reminder emails
     def handle(self, *args, **kwargs):
