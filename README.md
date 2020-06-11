@@ -61,7 +61,7 @@ Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
 
-Load the web-app in the browser by navigating to URL http://localhost:8000/
+Load the web-app in the browser by navigating to URL [http://localhost:8000/](http://localhost:8000/)
 
 ### Run on Other Devices
 
@@ -85,7 +85,7 @@ Using SSL certificate: #####
 Using SSL key: #####
 Quit the server with CONTROL-C.
 ```
-where `#####` are the roots to the SSL server's SSL certificate and key.
+where `#####` are the roots to the SSL server's (simulated) SSL certificate and key. Note that real HTTPS certification has not been obtained for the development of this project, but has been simulated using the Django SSL server to enable camera access for QR code scanning.
 
-Load the web-app in the browser by navigating to URL https://<IP_Address>:8000/ (note: the https:// is important).
+Load the web-app in a browser by navigating to URL https://<IP_Address>:8000/ (note: the https:// is important to allow camera access).
 
