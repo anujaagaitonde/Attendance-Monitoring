@@ -19,9 +19,14 @@ This repository contains the source code and design files used to implement the 
 ### Prerequisites
 * Python 3
 * PIP
-* Virtualenv
 
 ### Installation
+
+Install Virtualenv
+```
+pip install virtualenv
+```
+
 Set up Python virtual environment
 ```
 virtualenv venv
