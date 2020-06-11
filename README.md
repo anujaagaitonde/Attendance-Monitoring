@@ -7,6 +7,11 @@ automatically notify admin users of suspicious attendance patterns.
 
 This repository contains the source code and design files used to implement the web-app.
 
+# Contents
+
+- [Getting Started](#getting-started)
+- [Authentication Using Test Users](#authentication-using-test-users)
+
 ## Getting Started
 ### Prerequisites
 * Python 3
@@ -34,6 +39,9 @@ Install dependencies from `requirements.txt`
 ```
 pip install -r requirements.txt
 ```
+
+### Database
+
 The project is set up to use the default SQLite database. To use another database, inside `/attendance_app_django/settings.py` reconfigure the lines
 ```
 DATABASES = {
@@ -87,5 +95,50 @@ Quit the server with CONTROL-C.
 ```
 where `#####` are the roots to the SSL server's (simulated) SSL certificate and key. Note that real HTTPS certification has not been obtained for the development of this project, but has been simulated using the Django SSL server to enable camera access for QR code scanning.
 
-Load the web-app in a browser by navigating to URL https://<IP_Address>:8000/ (note: the https:// is important to allow camera access).
+Load the web-app in a browser by navigating to URL [https://<IP_Address>:8000/](https://<IP_Address>:8000/), replacing <IP_Address> with `<IP_Address>` (note: the https:// is important to allow camera access).
 
+### Configuration of Cron Jobs
+
+Cron jobs are used to send reminder emails to staff users to complete outstanding event registers and weekly student attendance digest emails to admin users.
+
+Configure shell files:
+`send_reminder_email.sh`:
+```
+<Absolute_path_to_manage.py> send_reminder_email
+```
+`send_admin_digest.sh`:
+```
+<Absolute_path_to_manage.py> send_admin_digest
+```
+where `<Absolute_path_to_manage.py>` is the **absolute** file path to the Django project's `manage.py` file.
+
+Make `send_reminder_email.sh'` and `send_admin_digest.sh` executable
+```
+chmod +x send_admin_digest.sh && chmod +x send_reminder_email.sh
+```
+
+Open local machine crontab
+```
+crontab -e
+```
+
+Configure cron jobs in crontab
+```
+17 * * * cd <Absolute_path_to_send_reminder_email.sh> && ./send_reminder_email.sh
+0 09 * * 1 cd <Absolute_path_to_send_admin_digest.sh> && ./send_admin_digest.sh
+```
+where `<Absolute_path_to_send_reminder_email.sh>` and `<Absolute_path_to_send_admin_digest.sh>` are the **absolute** paths to the `send_reminder_email.sh` and `send_admin_digest.sh` executable shell files, respectively.
+
+## Authentication Using Test Users
+
+For testing purposes, several users were created with the following credentials (replace # in the username with one of the # values:
+
+| Username | Value of # (Incl.) | Password   |
+|----------|--------------------|------------|
+| admin#   | 1-4                | testing321 |
+| student# | 1-11               | testing321 |
+| staff#   | 1-7                | testing321 |
+
+Note: for security purposes, these users are just test users and so the accounts contain no data representative of any real person. These test users **must** be deleted before deployment.
+
+All the admin users are able to access the Django admin interface at URL */admin/* to manage the web-app's database content, i.e. add new users, events, etc.
