@@ -11,6 +11,9 @@ This repository contains the source code and design files used to implement the 
 
 - [Getting Started](#getting-started)
 - [Authentication Using Test Users](#authentication-using-test-users)
+- [About This Repository](#about-this-repository)
+- [Technologies Used](#technologies-used)
+- [Credits](#credits)
 
 ## Getting Started
 ### Prerequisites
@@ -104,13 +107,13 @@ Cron jobs are used to send reminder emails to staff users to complete outstandin
 Configure shell files:
 `send_reminder_email.sh`:
 ```
-<Absolute_path_to_manage.py> send_reminder_email
+<absolute_path_to_manage.py> send_reminder_email
 ```
 `send_admin_digest.sh`:
 ```
-<Absolute_path_to_manage.py> send_admin_digest
+<absolute_path_to_manage.py> send_admin_digest
 ```
-where `<Absolute_path_to_manage.py>` is the **absolute** file path to the Django project's `manage.py` file.
+where `<absolute_path_to_manage.py>` is the **absolute** file path to the Django project's `manage.py` file.
 
 Make `send_reminder_email.sh'` and `send_admin_digest.sh` executable
 ```
@@ -124,10 +127,10 @@ crontab -e
 
 Configure cron jobs in crontab
 ```
-17 * * * cd <Absolute_path_to_send_reminder_email.sh> && ./send_reminder_email.sh
-0 09 * * 1 cd <Absolute_path_to_send_admin_digest.sh> && ./send_admin_digest.sh
+17 * * * cd <absolute_path_to_send_reminder_email.sh> && ./send_reminder_email.sh
+0 09 * * 1 cd <absolute_path_to_send_admin_digest.sh> && ./send_admin_digest.sh
 ```
-where `<Absolute_path_to_send_reminder_email.sh>` and `<Absolute_path_to_send_admin_digest.sh>` are the **absolute** paths to the `send_reminder_email.sh` and `send_admin_digest.sh` executable shell files, respectively.
+where `<absolute_path_to_send_reminder_email.sh>` and `<absolute_path_to_send_admin_digest.sh>` are the **absolute** paths to the `send_reminder_email.sh` and `send_admin_digest.sh` executable shell files, respectively.
 
 ## Authentication Using Test Users
 
@@ -142,3 +145,20 @@ For testing purposes, several users were created with the following credentials 
 Note: for security purposes, these users are just test users and so the accounts contain no data representative of any real person. These test users **must** be deleted before deployment.
 
 All the admin users are able to access the Django admin interface at URL */admin/* to manage the web-app's database content, i.e. add new users, events, etc.
+
+## About This Repository
+* [attendance_app_django](https://github.com/anujaagaitonde/Attendance-Monitoring/tree/master/attendance_app_django): Django project (contains entire web-app)
+* [UI](https://github.com/anujaagaitonde/Attendance-Monitoring/tree/master/UI): Contains web-app wireframes and UI screenshots
+
+## Technologies Used
+The Attendance App was built using:
+* [Python3.8.0](https://www.python.org/downloads/release/python-380/)
+* [PIP](https://pypi.org/project/pip/)
+* [Django](https://www.djangoproject.com/)
+* [Bootstrap](http://getbootstrap.com/)
+* Other dependencies in `requirements.txt`
+
+## Credits
+**Author:** Anuja Gaitonde
+
+The Attendance App was created under the supervision of Dr. Thomas J. W. Clarke, submitted in partial fulfillment for an MEng degree in Electrical & Electronic Engineering with Management from Imperial College, London
