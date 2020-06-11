@@ -61,6 +61,20 @@ DATABASES = {
 ```
 according to the desired database structure. SQLite is recommended for development.
 
+### Emails
+
+To set which email account the staff register reminder emails and attendance digest emails are sent from, in `/attendance_app_django/settings.py` reconfigure the lines
+```
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'imperialattendance@gmail.com'
+EMAIL_HOST_PASSWORD = 'cagvab-7nudru-jedCar'
+```
+
+where `EMAIL_BACKEND`, `EMAIL_HOST`, `EMAIL_PORT` and `EMAIL_USE_TLS` are specified by the emailing provider and `EMAIL_HOST_USER` and `EMAIL_HOST_PASSWORD` are the email and password of the desired email account.
+
 ### Run on Local Machine
 
 To run on the local machine only, start the default Django development server using
@@ -120,7 +134,7 @@ Configure shell files:
 ```
 where `<absolute_path_to_manage.py>` is the **absolute** file path to the Django project's `manage.py` file.
 
-Make `send_reminder_email.sh'` and `send_admin_digest.sh` executable
+Make `send_reminder_email.sh` and `send_admin_digest.sh` executable
 ```
 chmod +x send_admin_digest.sh && chmod +x send_reminder_email.sh
 ```
