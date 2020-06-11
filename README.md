@@ -105,11 +105,11 @@ Load the web-app in a browser by navigating to URL [https://<IP_Address>:8000/](
 Cron jobs are used to send reminder emails to staff users to complete outstanding event registers and weekly student attendance digest emails to admin users.
 
 Configure shell files:
-`send_reminder_email.sh`:
+`send_reminder_email.sh`
 ```
 <absolute_path_to_manage.py> send_reminder_email
 ```
-`send_admin_digest.sh`:
+`send_admin_digest.sh`
 ```
 <absolute_path_to_manage.py> send_admin_digest
 ```
@@ -132,6 +132,8 @@ Configure cron jobs in crontab
 ```
 where `<absolute_path_to_send_reminder_email.sh>` and `<absolute_path_to_send_admin_digest.sh>` are the **absolute** paths to the `send_reminder_email.sh` and `send_admin_digest.sh` executable shell files, respectively.
 
+**Note:** Ensure crontab has full access permissions to all files on your machine to ensure the cron jobs are properly executed.
+
 ## Authentication Using Test Users
 
 For testing purposes, several users were created with the following credentials (replace # in the username with one of the # values:
@@ -147,7 +149,7 @@ Note: for security purposes, these users are just test users and so the accounts
 All the admin users are able to access the Django admin interface at URL */admin/* to manage the web-app's database content, i.e. add new users, events, etc.
 
 ## About This Repository
-* [attendance_app_django](https://github.com/anujaagaitonde/Attendance-Monitoring/tree/master/attendance_app_django): Django project (contains entire web-app)
+* [attendance_app_django](https://github.com/anujaagaitonde/Attendance-Monitoring/tree/master/attendance_app_django): Django project (contains code for entire web-app)
 * [UI](https://github.com/anujaagaitonde/Attendance-Monitoring/tree/master/UI): Contains web-app wireframes and UI screenshots
 
 ## Technologies Used
