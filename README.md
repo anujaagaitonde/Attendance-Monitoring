@@ -155,7 +155,7 @@ where `<absolute_path_to_send_reminder_email.sh>` and `<absolute_path_to_send_ad
 
 ## Authentication Using Test Users
 
-For testing purposes, several users were created with the following credentials (replace # in the username with one of the # values:
+For testing purposes, several users were created with the following credentials (replace # in the username with one of the # values):
 
 | Username | Value of # (Incl.) | Password   |
 |----------|--------------------|------------|
