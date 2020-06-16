@@ -1,7 +1,7 @@
 {% extends 'main/register_list.html' %}
 
 {% block upcoming_or_past %}
-    <h2>Past Event Registers ({{ page_obj.paginator.count }})</h2> <!-- Display number of upcoming events for this user -->
+    <h2>Completed Event Registers ({{ page_obj.paginator.count }})</h2> <!-- Display number of upcoming events for this user -->
     <h6><a class="subtitle" href="{% url 'outstanding-registers' %}">View Outstanding Event Registers</a></h6>
 {% endblock upcoming_or_past %}
 
