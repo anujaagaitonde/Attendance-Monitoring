@@ -3,4 +3,4 @@ venv
 .vscode/settings.json
 __pycache__
 /send_reminder_email.sh
-/send_attendance_digest.sh
+/send_admin_digest.sh
